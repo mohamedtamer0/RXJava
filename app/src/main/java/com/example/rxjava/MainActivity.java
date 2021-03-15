@@ -24,15 +24,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable observable = Observable.create(new ObservableOnSubscribe<Object>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Object> emitter) throws Throwable {
-                for (int i = 0 ; i < 5 ; i++) {
-                    emitter.onNext(i);
-                }
-                emitter.onComplete();
-            }
-        });
+        Observable observable = Observable.just(0,1,2,3,4);
+
+//        Observable observable = Observable.create(new ObservableOnSubscribe<Object>() {
+//            @Override
+//            public void subscribe(@NonNull ObservableEmitter<Object> emitter) throws Throwable {
+//                for (int i = 0 ; i < 5 ; i++) {
+//                    emitter.onNext(i);
+//                }
+//                emitter.onComplete();
+//            }
+//        });
 
 
         Observer observer = new Observer() {
