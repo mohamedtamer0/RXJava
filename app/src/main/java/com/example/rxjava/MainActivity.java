@@ -12,8 +12,10 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observables.ConnectableObservable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +26,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable observable = Observable.just(0,1,2,3,4);
+        Observable.just(1, 2, 3, 4, 5)
+                .doOnNext(c -> Log.d(TAG, " tamer UpStream: " + c + "current thread " + Thread.currentThread().getName()))
+                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
+                .subscribe(o -> Log.d(TAG, "tamer DownStream: " + o + "current thread " + Thread.currentThread().getName()));
+
+
+        sleep(300);
+
+//        Observable observable = Observable.just(0,1,2,3,4);
 
 //        Observable observable = Observable.create(new ObservableOnSubscribe<Object>() {
 //            @Override
@@ -36,29 +47,28 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-
-        Observer observer = new Observer() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                Log.d(TAG, "onSubscribe: ");
-            }
-
-            @Override
-            public void onNext(@NonNull Object o) {
-                Log.d(TAG, "onNext: " + o);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.d(TAG, "onError: " + e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-                Log.d(TAG, "onComplete: ");
-            }
-        };
-        observable.subscribe(observer);
+//        Observer observer = new Observer() {
+//            @Override
+//            public void onSubscribe(@NonNull Disposable d) {
+//                Log.d(TAG, "onSubscribe: ");
+//            }
+//
+//            @Override
+//            public void onNext(@NonNull Object o) {
+//                Log.d(TAG, "onNext: " + o);
+//            }
+//
+//            @Override
+//            public void onError(@NonNull Throwable e) {
+//                Log.d(TAG, "onError: " + e.getMessage());
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//                Log.d(TAG, "onComplete: ");
+//            }
+//        };
+//        observable.subscribe(observer);
 
 //        PublishSubject<String> subject = PublishSubject.create();
 //        subject.subscribe(i -> Log.d(TAG,"onCreate: student 1:" + i));
