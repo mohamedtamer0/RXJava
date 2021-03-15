@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.observables.ConnectableObservable;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -16,10 +17,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable<Long> cold = Observable
-                .intervalRange(0, 5, 0, 1, TimeUnit.SECONDS);
+//        Observable<Long> cold = Observable
+//                .intervalRange(0, 5, 0, 1, TimeUnit.SECONDS);
 
-        cold.subscribe(i -> Log.d(TAG,"onCreate: student 1:" + i));
+        ConnectableObservable<Long> hot = ConnectableObservable
+                .intervalRange(0, 5, 0, 1, TimeUnit.SECONDS).publish();
+        hot.connect();
+
+        hot.subscribe(i -> Log.d(TAG,"onCreate: student 1:" + i));
 
         try {
             Thread.sleep(3000);
@@ -27,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        cold.subscribe(i -> Log.d(TAG,"onCreate: student 2:" + i));
+        hot.subscribe(i -> Log.d(TAG,"onCreate: student 2:" + i));
 
 
     }
